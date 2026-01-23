@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Consumables Inventory</title>
+  <link rel="icon" href="https://qudscam.com/storage/13/01JV329X1WE6KH0G06KNB3DJ0Y.png?v=1769197536">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- صفحة المنتجات -->
+  <div id="productsPage" class="page active">
+    <div class="header">
+      <h3>المنتجات</h3>
+
+      <!-- زر القائمة + زر الإضافة -->
+      <div class="header-actions">
+        <button id="menuBtn">☰</button>
+		<br>
+        <button id="addProductBtn">+</button>
+      </div>
+    </div>
+
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="بحث" class="search">
+    </div>
+
+    <button onclick="renderProducts()" class="print-btn">عرض الكل</button>
+    <button onclick="printProducts()" class="print-btn">طباعة PDF</button>
+
+    <div id="productsList"></div>
+  </div>
+
+  <!-- صفحة الأصناف -->
+  <div id="categoriesPage" class="page">
+    <div class="header">
+      <h3>الأصناف</h3>
+
+      <!-- زر الإضافة فقط -->
+      <button id="addCategoryBtn">+</button>
+    </div>
+
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="بحث" class="search" id="catSearch">
+    </div>
+
+    <div id="categoriesList"></div>
+  </div>
+
+  <!-- شريط التنقل السفلي -->
+  <div class="bottom-nav">
+    <button onclick="showPage('products')">📦<br>المنتجات</button>
+    <button onclick="showPage('categories')">📁<br>الأصناف</button>
+  </div>
+
+</div>
+
+<!-- ===== القائمة الجانبية (Hamburger Menu) ===== -->
+<div id="sideMenu" class="side-menu">
+  <div class="side-header">
+    <h3>📦 Consumables</h3>
+  </div>
+
+  <button onclick="exportToExcel()">📤 تصدير المنتجات إلى Excel</button>
+  <button onclick="importFromExcel()">📥 استيراد من Excel</button>
+  <button onclick="exitApp()">🚪 خروج</button>
+
+  <hr>
+
+  <button class="close-menu" id="closeMenuBtn">اغلاق</button>
+
+  <input type="file" id="excelInput" accept=".xlsx,.xls" hidden>
+</div>
+
+<div id="sideOverlay" class="side-overlay"></div>
+
+<!-- نافذة إضافة منتج -->
+<div id="productForm" class="modal">
+  <div class="modal-content">
+    <h3>إضافة منتج</h3>
+
+    <input id="pName" placeholder="اسم المنتج">
+    <input id="pQty" type="number" placeholder="الكمية">
+    <input id="pPrice" type="number" placeholder="السعر">
+
+    <select id="pCategory"></select>
+
+    <input id="pImage" type="file" accept="image/*">
+
+    <button onclick="saveProduct()">حفظ</button>
+    <button onclick="closeForm()">إلغاء</button>
+  </div>
+</div>
+
+<!-- مودال عن المبرمج -->
+<div id="aboutModal" class="modal">
+  <div class="modal-content">
+    <h3 style="margin-top:0;">لمحة عن المبرمج</h3>
+    <p id="aboutText" style="text-align:right; line-height:1.6;">
+      <!-- النص راح يتعبأ من الجافا -->
+    </p>
+    <button onclick="closeAbout()" style="width:100%; margin-top:10px;">إغلاق</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+</body>
+</html>

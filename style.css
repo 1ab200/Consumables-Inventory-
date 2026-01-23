@@ -1,0 +1,531 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #121212;
+  color: white;
+  text-align: center;
+}
+
+#app {
+  padding: 40px;
+}
+
+.app {
+  max-width: 400px;
+  margin: auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* الصفحات */
+.page {
+  flex: 1;
+  display: none;
+  padding: 10px;
+}
+
+.page.active {
+  display: block;
+}
+
+/* الهيدر */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header button {
+  background: #F54927;
+  border: none;
+  color: white;
+  font-size: 20px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* حقل البحث */
+.search-wrapper {
+  position: relative;
+  width: 100%;
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+}
+
+.search {
+  width: 100%;
+  padding: 12px 40px 12px 15px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  color: white;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+  text-align: right;
+}
+
+.search::placeholder {
+  color: #FFFFFF;
+}
+
+.search-icon {
+  position: absolute;
+  right: 15px;
+  font-size: 14px;
+  color: #888;
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
+/* شريط التنقل السفلي */
+.bottom-nav {
+  display: flex;
+  background: #1e1e1e;
+}
+
+.bottom-nav button {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  color: white;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* المودال */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+}
+
+/* input داخل المودال */
+.modal-content input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  font-size: 15px;
+  outline: none;
+}
+
+/* ====== تنسيق select (الدروب داون) ====== */
+.modal-content select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  font-size: 15px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+
+  /* سهم الدروب داون */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 10px center;
+  padding-left: 35px;
+}
+
+.modal-content select option {
+  background: #1e1e1e;
+  color: white;
+}
+
+/* أزرار المودال */
+.modal-content button {
+  width: 48%;
+  padding: 10px;
+  margin: 5px 1%;
+  border: none;
+  border-radius: 6px;
+  background: #F54927;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* عناصر المنتجات */
+.item {
+  background: #1e1e1e;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.item:hover {
+  background: #2a2a2a;
+}
+
+.item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  object-fit: cover;
+  margin-left: 10px;
+}
+
+.item div b {
+  font-size: 16px;
+  color: white;
+}
+
+.low {
+  color: red;
+  font-weight: bold;
+}
+
+/* زر الثلاث نقاط */
+.dots {
+  background: none;
+  color: white;
+  font-size: 22px;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+/* Dropdown القائمة */
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: #2e2e2e;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  min-width: 120px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.dropdown button {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+/* تعديل */
+.dropdown button:first-child {
+  background: #ffea00;
+  color: #000;
+}
+
+.dropdown button:first-child:hover {
+  background: #ffe000;
+}
+
+/* حذف */
+.dropdown button:last-child {
+  background: #f44336;
+  color: #fff;
+}
+
+.dropdown button:last-child:hover {
+  background: #d32f2f;
+}
+
+/* زر الطباعة */
+.print-btn {
+  width: 100%;
+  padding: 10px;
+  background: #F54927;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+/* Dropdown للأصناف */
+.category-dropdown {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: #2e2e2e;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  min-width: 120px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.category-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.category-dropdown button:first-child {
+  background: #ffea00;
+  color: #000;
+}
+
+.category-dropdown button:first-child:hover {
+  background: #ffe000;
+}
+
+.category-dropdown button:last-child {
+  background: #f44336;
+  color: #fff;
+}
+
+.category-dropdown button:last-child:hover {
+  background: #d32f2f;
+}
+
+/* لضمان عدم تغطية الاسم بزر الثلاث نقاط */
+#categoriesList .item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+/* حتى يكون زر الثلاث نقاط صغير وما يغطي الاسم */
+#categoriesList .dots {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* منع تداخل الضغط */
+#categoriesList .item span {
+  flex: 1;
+  cursor: pointer;
+}
+
+/* ===== القائمة الجانبية ===== */
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: -280px;
+  width: 260px;
+  height: 100%;
+  background: #1e1e1e;
+  z-index: 1000;
+  padding: 15px;
+  transition: right 0.3s ease;
+}
+
+.side-menu.active {
+  right: 0;
+}
+
+.side-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.side-menu button {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #2a2a2a;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.side-menu button:hover {
+  background: #F54927;
+}
+
+.side-menu hr {
+  border: 1px solid #333;
+  margin: 15px 0;
+}
+
+.side-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  z-index: 999;
+}
+
+.side-overlay.active {
+  display: block;
+}
+
+/* ===== إصلاح القائمة الجانبية على الموبايل ===== */
+@media (max-width: 480px) {
+  .side-menu {
+    width: 220px; /* تصغير عرض القائمة */
+  }
+
+  /* لما تكون القائمة مفتوحة، نزيح الصفحة لليسار */
+  body.menu-open .app {
+    transform: translateX(-220px);
+    transition: transform 0.3s ease;
+  }
+
+  body.menu-open #app {
+    padding-right: 0;
+  }
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
+
+/* شاشات كبيرة (كمبيوتر / لابتوب كبير) */
+@media (min-width: 1024px) {
+  .app {
+    max-width: 600px;
+  }
+
+  .header h3 {
+    font-size: 26px;
+  }
+
+  .item img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .search,
+  .modal-content input,
+  .modal-content select {
+    font-size: 16px;
+  }
+}
+
+/* لابتوب عادي */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .app {
+    max-width: 500px;
+  }
+
+  .header h3 {
+    font-size: 24px;
+  }
+}
+
+/* تابلت */
+@media (max-width: 767px) {
+  .app {
+    max-width: 100%;
+    padding: 0 5px;
+  }
+
+  .header h3 {
+    font-size: 20px;
+  }
+
+  .item img {
+    width: 45px;
+    height: 45px;
+  }
+
+  .bottom-nav button {
+    font-size: 13px;
+  }
+}
+
+/* موبايل */
+@media (max-width: 480px) {
+  .header h3 {
+    font-size: 18px;
+  }
+
+  .header button {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+
+  .search {
+    padding: 10px 35px 10px 12px;
+    font-size: 14px;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .modal-content input,
+  .modal-content select {
+    font-size: 14px;
+  }
+
+  .modal-content button {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .item {
+    padding: 8px;
+  }
+
+  .item div b {
+    font-size: 14px;
+  }
+
+  .dots {
+    font-size: 20px;
+  }
+}
+
+
+
