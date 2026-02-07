@@ -526,6 +526,18 @@ body {
     font-size: 20px;
   }
 }
+/* النسخ الاتياطية */
+#backupMsg {
+  margin-top: 10px;
+  font-weight: bold;
+}
 
+.success {
+  color: #00ff88;
+}
+
+.error {
+  color: #ff4d4d;
+}
 
 
