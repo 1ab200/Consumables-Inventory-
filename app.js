@@ -444,6 +444,7 @@ function closeBackup() {
 const CLIENT_ID = "1099246027075-7gllnrmoq4db4t2093s31jfc8eaqdstk.apps.googleusercontent.com";
 const API_KEY = "AIzaSyBV81_wlt16iFvS_3HrvmKGSomRD3w-GPw";
 const SCOPES = "https://www.googleapis.com/auth/drive.file";
+
 let tokenClient;
 let gapiInited = false;
 
@@ -458,18 +459,36 @@ async function initializeGapiClient() {
   });
   gapiInited = true;
 }
-// ===== تسجيل الدخول + النسخ الاحتياطي   =====
+
+// ===== تسجيل الدخول + النسخ الاحتياطي =====
 function loginAndBackup() {
+
+  if (!gapiInited) {
+    backupError();
+    return;
+  }
+
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
     scope: SCOPES,
-    callback: (tokenResponse) => {
-      uploadBackup();
+    callback: async (tokenResponse) => {
+
+      if (tokenResponse.error) {
+        backupError();
+        return;
+      }
+
+      // 🔥 التعديل المهم
+      gapi.client.setToken(tokenResponse);
+
+      await uploadBackup();
     },
   });
+
   tokenClient.requestAccessToken();
 }
-// =====  إنشاء ملف النسخة الاحتياطية  =====
+
+// ===== إنشاء ملف النسخة الاحتياطية =====
 function getBackupData() {
   return JSON.stringify({
     products: JSON.parse(localStorage.getItem("products")) || [],
@@ -477,13 +496,12 @@ function getBackupData() {
   });
 }
 
-// =====   رفع النسخة (مع حذف القديمة) =====
+// ===== رفع النسخة (مع حذف القديمة) =====
 async function uploadBackup() {
   try {
     const msg = document.getElementById("backupMsg");
     const data = getBackupData();
 
-    // ابحث عن النسخة القديمة
     const res = await gapi.client.drive.files.list({
       q: "name='inventory_backup.json'"
     });
@@ -495,6 +513,7 @@ async function uploadBackup() {
     }
 
     const file = new Blob([data], { type: "application/json" });
+
     const metadata = {
       name: "inventory_backup.json",
       mimeType: "application/json"
@@ -517,19 +536,19 @@ async function uploadBackup() {
 
     startAutoBackup();
 
-  } catch {
+  } catch (e) {
     backupError();
   }
 }
 
-// =====   النسخ التلقائي كل ساعة =====
+// ===== النسخ التلقائي كل ساعة =====
 function startAutoBackup() {
   setInterval(() => {
     uploadBackup();
   }, 60 * 60 * 1000);
 }
 
-// =====  استرجاع النسخة الاحتياطية  =====
+// ===== استرجاع النسخة الاحتياطية =====
 async function restoreBackup() {
   try {
     const res = await gapi.client.drive.files.list({
@@ -542,6 +561,7 @@ async function restoreBackup() {
     }
 
     const fileId = res.result.files[0].id;
+
     const file = await fetch(
       `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
       {
@@ -556,31 +576,33 @@ async function restoreBackup() {
     localStorage.setItem("products", JSON.stringify(data.products));
     localStorage.setItem("categories", JSON.stringify(data.categories));
 
-    document.getElementById("backupMsg").textContent =
-      "تم استرجاع البيانات بنجاح";
-    document.getElementById("backupMsg").className = "success";
+    const msg = document.getElementById("backupMsg");
+    msg.textContent = "تم استرجاع البيانات بنجاح";
+    msg.className = "success";
 
     renderProducts();
     renderCategories();
 
-  } catch {
+  } catch (e) {
     backupError();
   }
 }
 
-// =====   تسجيل الخروج =====
+// ===== تسجيل الخروج =====
 function logoutDrive() {
-  google.accounts.oauth2.revoke(
-    gapi.client.getToken().access_token,
-    () => {
+  const token = gapi.client.getToken();
+
+  if (token !== null) {
+    google.accounts.oauth2.revoke(token.access_token, () => {
+      gapi.client.setToken("");
       document.getElementById("backupMsg").textContent =
         "تم تسجيل الخروج وإيقاف النسخ الاحتياطي";
       document.getElementById("backupMsg").className = "error";
-    }
-  );
+    });
+  }
 }
 
-// =====    رسالة الخطأ (أحمر فقط)=====
+// ===== رسالة الخطأ =====
 function backupError() {
   const msg = document.getElementById("backupMsg");
   msg.textContent = "فشلت العملية، تأكد من تسجيل الدخول";
